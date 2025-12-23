@@ -80,41 +80,39 @@ function isSameSizeDevice(widthModel: IPhoneModel, heightModel: IPhoneModel) {
   <div class="container">
     <h1>iOS Screen Range Checker</h1>
     <div class="card">
-      <label for="os-version">iOS Version</label>
+      <label for="os-version">Minimum Deployments</label>
       <select id="os-version" bind:value={selectedVersion}>
         {#each iOSVersions as version}
           <option value={version}>{version}</option>
         {/each}
       </select>
     </div>
-    {#if supportedModels && supportedModels.length > 0}
-      <div class="screen-blocks">
-        <div class="screen-block min-block">
-          <div class="block-label">Min</div>
-          {#if isSameSizeDevice(minWidthModel, minHeightModel)}
-            <div class="block-pixel">{minWidthModel.screen.width} × {minWidthModel.screen.height}<span class="block-unit">px</span></div>
-            <div class="block-device">{minWidthModel.name}</div>
-          {:else}
-            <div class="block-pixel">{minWidthModel.screen.width} × {minWidthModel.screen.height}<span class="block-unit">px</span></div>
-            <div class="block-device">{minWidthModel.name}</div>
-            <div class="block-pixel">{minHeightModel.screen.width} × {minHeightModel.screen.height}<span class="block-unit">px</span></div>
-            <div class="block-device">{minHeightModel.name}</div>
-          {/if}
-        </div>
-        <div class="screen-block max-block">
-          <div class="block-label">Max</div>
-          {#if isSameSizeDevice(maxWidthModel, maxHeightModel)}
-            <div class="block-pixel">{maxWidthModel.screen.width} × {maxWidthModel.screen.height}<span class="block-unit">px</span></div>
-            <div class="block-device">{maxWidthModel.name}</div>
-          {:else}
-            <div class="block-pixel">{maxWidthModel.screen.width} × {maxWidthModel.screen.height}<span class="block-unit">px</span></div>
-            <div class="block-device">{maxWidthModel.name}</div>
-            <div class="block-pixel">{maxHeightModel.screen.width} × {maxHeightModel.screen.height}<span class="block-unit">px</span></div>
-            <div class="block-device">{maxHeightModel.name}</div>
-          {/if}
-        </div>
+    <div class="screen-blocks">
+      <div class="screen-block min-block">
+        <div class="block-label">Min</div>
+        {#if isSameSizeDevice(minWidthModel, minHeightModel)}
+          <div class="block-pixel">{minWidthModel.screen.width} × {minWidthModel.screen.height}<span class="block-unit">px</span></div>
+          <div class="block-device">{minWidthModel.name}</div>
+        {:else}
+          <div class="block-pixel">{minWidthModel.screen.width} × {minWidthModel.screen.height}<span class="block-unit">px</span></div>
+          <div class="block-device">{minWidthModel.name}</div>
+          <div class="block-pixel">{minHeightModel.screen.width} × {minHeightModel.screen.height}<span class="block-unit">px</span></div>
+          <div class="block-device">{minHeightModel.name}</div>
+        {/if}
       </div>
-    {/if}
+      <div class="screen-block max-block">
+        <div class="block-label">Max</div>
+        {#if isSameSizeDevice(maxWidthModel, maxHeightModel)}
+          <div class="block-pixel">{maxWidthModel.screen.width} × {maxWidthModel.screen.height}<span class="block-unit">px</span></div>
+          <div class="block-device">{maxWidthModel.name}</div>
+        {:else}
+          <div class="block-pixel">{maxWidthModel.screen.width} × {maxWidthModel.screen.height}<span class="block-unit">px</span></div>
+          <div class="block-device">{maxWidthModel.name}</div>
+          <div class="block-pixel">{maxHeightModel.screen.width} × {maxHeightModel.screen.height}<span class="block-unit">px</span></div>
+          <div class="block-device">{maxHeightModel.name}</div>
+        {/if}
+      </div>
+    </div>
   </div>
 </main>
 
@@ -124,11 +122,9 @@ function isSameSizeDevice(widthModel: IPhoneModel, heightModel: IPhoneModel) {
     font-family: "Inter", "Segoe UI", "Helvetica Neue", Arial, "Liberation Sans",
       sans-serif;
     background: linear-gradient(120deg, #f8fafc 0%, #e0e7ff 100%);
-    min-height: 100vh;
   }
 
   .container {
-    min-height: 100vh;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -148,7 +144,7 @@ function isSameSizeDevice(widthModel: IPhoneModel, heightModel: IPhoneModel) {
   .card {
     display: flex;
     flex-direction: column;
-    align-items: flex-start;
+    align-items: center;
     gap: 0.7em;
     padding: 2em 2.5em;
     border-radius: 18px;
