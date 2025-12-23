@@ -20,7 +20,7 @@ export const iOSVersions = [
   '26',
 ] as const;
 
-export type IOSMajorVersion = typeof iOSVersions[number] | 'supported';
+export type IOSMajorVersion = (typeof iOSVersions)[number] | 'supported';
 
 export interface IPhoneModel {
   name: string;

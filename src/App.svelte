@@ -1,7 +1,7 @@
 <script lang="ts">
-  import { iOSVersions } from "./lib/iosTypes";
+import { iOSVersions } from './lib/iosTypes';
 
-  let selectedVersion: string = iOSVersions[iOSVersions.length - 1];
+let selectedVersion: string = iOSVersions[iOSVersions.length - 1];
 </script>
 
 <main>
