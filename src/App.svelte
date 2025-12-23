@@ -1,7 +1,40 @@
 <script lang="ts">
-import { iOSVersions } from './lib/iosTypes';
+import { iPhoneModels } from './lib/iosModels';
+import {
+  type IOSMajorVersion,
+  type IPhoneModel,
+  iOSVersions,
+} from './lib/iosTypes';
 
-let selectedVersion: string = iOSVersions[iOSVersions.length - 1];
+type SelectableIOSMajorVersion = Exclude<IOSMajorVersion, 'supported'>;
+
+let selectedVersion: SelectableIOSMajorVersion = $state(iOSVersions[iOSVersions.length - 1]);
+let supportedModels = $derived(iPhoneModels.filter((model) => isModelSupported(model, selectedVersion)));
+
+function isModelSupported(
+  model: IPhoneModel,
+  selectedVersion: SelectableIOSMajorVersion,
+): boolean {
+  if (model.maxOS === 'supported') return true;
+  return selectedVersion <= model.maxOS;
+}
+
+let minWidthModel = $derived(supportedModels.reduce(
+  (min, m) => (m.screen.width < min.screen.width ? m : min),
+  supportedModels[0],
+));
+let minHeightModel = $derived(supportedModels.reduce(
+  (min, m) => (m.screen.height < min.screen.height ? m : min),
+  supportedModels[0],
+));
+let maxWidthModel = $derived(supportedModels.reduce(
+  (max, m) => (m.screen.width > max.screen.width ? m : max),
+  supportedModels[0],
+));
+let maxHeightModel = $derived(supportedModels.reduce(
+  (max, m) => (m.screen.height > max.screen.height ? m : max),
+  supportedModels[0],
+));
 </script>
 
 <main>
@@ -15,9 +48,17 @@ let selectedVersion: string = iOSVersions[iOSVersions.length - 1];
         {/each}
       </select>
     </div>
-    <div class="selected-version">
-      Selected: <span>{selectedVersion}</span>
-    </div>
+    {#if supportedModels && supportedModels.length > 0}
+      <div class="screen-summary">
+        <h2>Supported Device Screen Sizes</h2>
+        <ul>
+          <li>Min Width: {minWidthModel.name} ({minWidthModel.screen.width}px)</li>
+          <li>Min Height: {minHeightModel.name} ({minHeightModel.screen.height}px)</li>
+          <li>Max Width: {maxWidthModel.name} ({maxWidthModel.screen.width}px)</li>
+          <li>Max Height: {maxHeightModel.name} ({maxHeightModel.screen.height}px)</li>
+        </ul>
+      </div>
+    {/if}
   </div>
 </main>
 
@@ -87,15 +128,31 @@ let selectedVersion: string = iOSVersions[iOSVersions.length - 1];
     background: #fff;
   }
 
-  .selected-version {
+  .screen-summary {
+    width: 100%;
+    padding: 1.5em 2em;
+    border-radius: 12px;
+    background: rgba(229, 231, 235, 0.9);
+    box-shadow: 0 2px 10px #0001;
+    margin-top: 1.5em;
+  }
+
+  .screen-summary h2 {
+    font-size: 1.3rem;
+    font-weight: 600;
+    color: #374151;
+    margin-bottom: 1em;
+  }
+
+  .screen-summary ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    color: #4b5563;
     font-size: 1.1rem;
-    color: #6366f1;
-    background: #eef2ff;
-    border-radius: 8px;
-    padding: 0.5em 1.2em;
-    box-shadow: 0 1px 4px #a5b4fc22;
-    margin-top: -1.2em;
-    font-weight: 500;
-    letter-spacing: 0.01em;
+  }
+
+  .screen-summary li {
+    margin-bottom: 0.5em;
   }
 </style>
