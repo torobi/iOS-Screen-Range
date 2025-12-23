@@ -20,21 +20,60 @@ function isModelSupported(
 }
 
 let minWidthModel = $derived(supportedModels.reduce(
-  (min, m) => (m.screen.width < min.screen.width ? m : min),
+  (min, m) => {
+    if (m.screen.width < min.screen.width) {
+      return m;
+    } else if (m.screen.width === min.screen.width) {
+      return m.screen.height < min.screen.height ? m : min;
+    } else {
+      return min;
+    }
+  },
   supportedModels[0],
 ));
 let minHeightModel = $derived(supportedModels.reduce(
-  (min, m) => (m.screen.height < min.screen.height ? m : min),
+  (min, m) => {
+    if (m.screen.height < min.screen.height) {
+      return m;
+    } else if (m.screen.height === min.screen.height) {
+      return m.screen.width < min.screen.width ? m : min;
+    } else {
+      return min;
+    }
+  },
   supportedModels[0],
 ));
 let maxWidthModel = $derived(supportedModels.reduce(
-  (max, m) => (m.screen.width > max.screen.width ? m : max),
+  (max, m) => {
+    if (m.screen.width > max.screen.width) {
+      return m;
+    } else if (m.screen.width === max.screen.width) {
+      return m.screen.height > max.screen.height ? m : max;
+    } else {
+      return max;
+    }
+  },
   supportedModels[0],
 ));
 let maxHeightModel = $derived(supportedModels.reduce(
-  (max, m) => (m.screen.height > max.screen.height ? m : max),
+  (max, m) => {
+    if (m.screen.height > max.screen.height) {
+      return m;
+    } else if (m.screen.height === max.screen.height) {
+      return m.screen.width > max.screen.width ? m : max;
+    } else {
+      return max;
+    }
+  },
   supportedModels[0],
 ));
+
+function isSameSizeDevice(widthModel: IPhoneModel, heightModel: IPhoneModel) {
+  return (
+    widthModel.screen.width === heightModel.screen.width &&
+    widthModel.screen.height === heightModel.screen.height
+  );
+}
 </script>
 
 <main>
@@ -49,14 +88,31 @@ let maxHeightModel = $derived(supportedModels.reduce(
       </select>
     </div>
     {#if supportedModels && supportedModels.length > 0}
-      <div class="screen-summary">
-        <h2>Supported Device Screen Sizes</h2>
-        <ul>
-          <li>Min Width: {minWidthModel.name} ({minWidthModel.screen.width}px)</li>
-          <li>Min Height: {minHeightModel.name} ({minHeightModel.screen.height}px)</li>
-          <li>Max Width: {maxWidthModel.name} ({maxWidthModel.screen.width}px)</li>
-          <li>Max Height: {maxHeightModel.name} ({maxHeightModel.screen.height}px)</li>
-        </ul>
+      <div class="screen-blocks">
+        <div class="screen-block min-block">
+          <div class="block-label">Min</div>
+          {#if isSameSizeDevice(minWidthModel, minHeightModel)}
+            <div class="block-pixel">{minWidthModel.screen.width} × {minWidthModel.screen.height}<span class="block-unit">px</span></div>
+            <div class="block-device">{minWidthModel.name}</div>
+          {:else}
+            <div class="block-pixel">{minWidthModel.screen.width} × {minWidthModel.screen.height}<span class="block-unit">px</span></div>
+            <div class="block-device">{minWidthModel.name}</div>
+            <div class="block-pixel">{minHeightModel.screen.width} × {minHeightModel.screen.height}<span class="block-unit">px</span></div>
+            <div class="block-device">{minHeightModel.name}</div>
+          {/if}
+        </div>
+        <div class="screen-block max-block">
+          <div class="block-label">Max</div>
+          {#if isSameSizeDevice(maxWidthModel, maxHeightModel)}
+            <div class="block-pixel">{maxWidthModel.screen.width} × {maxWidthModel.screen.height}<span class="block-unit">px</span></div>
+            <div class="block-device">{maxWidthModel.name}</div>
+          {:else}
+            <div class="block-pixel">{maxWidthModel.screen.width} × {maxWidthModel.screen.height}<span class="block-unit">px</span></div>
+            <div class="block-device">{maxWidthModel.name}</div>
+            <div class="block-pixel">{maxHeightModel.screen.width} × {maxHeightModel.screen.height}<span class="block-unit">px</span></div>
+            <div class="block-device">{maxHeightModel.name}</div>
+          {/if}
+        </div>
       </div>
     {/if}
   </div>
@@ -128,31 +184,55 @@ let maxHeightModel = $derived(supportedModels.reduce(
     background: #fff;
   }
 
-  .screen-summary {
-    width: 100%;
-    padding: 1.5em 2em;
-    border-radius: 12px;
-    background: rgba(229, 231, 235, 0.9);
-    box-shadow: 0 2px 10px #0001;
-    margin-top: 1.5em;
+  .screen-blocks {
+    display: flex;
+    gap: 2.5em;
+    justify-content: center;
+    margin-top: 2em;
   }
-
-  .screen-summary h2 {
-    font-size: 1.3rem;
+  .screen-block {
+    background: #f8fafc;
+    border-radius: 16px;
+    box-shadow: 0 2px 10px #a5b4fc22;
+    padding: 2em 2.5em 1.5em 2.5em;
+    min-width: 220px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    border: 2.5px solid #e0e7ff;
+  }
+  .min-block {
+    border-color: #38bdf8;
+  }
+  .max-block {
+    border-color: #a78bfa;
+  }
+  .block-label {
+    font-size: 1.05rem;
     font-weight: 600;
-    color: #374151;
-    margin-bottom: 1em;
+    color: #6366f1;
+    margin-bottom: 0.7em;
+    letter-spacing: 0.03em;
+    text-transform: uppercase;
   }
-
-  .screen-summary ul {
-    list-style: none;
-    padding: 0;
-    margin: 0;
-    color: #4b5563;
+  .block-pixel {
+    font-size: 2.2rem;
+    font-weight: 700;
+    color: #22223b;
+    margin-bottom: 0.3em;
+    letter-spacing: 0.01em;
+    text-align: center;
+  }
+  .block-unit {
     font-size: 1.1rem;
+    color: #6366f1;
+    margin-left: 0.2em;
   }
-
-  .screen-summary li {
-    margin-bottom: 0.5em;
+  .block-device {
+    font-size: 0.98rem;
+    color: #7c7c8a;
+    margin-top: 0.2em;
+    text-align: center;
+    opacity: 0.7;
   }
 </style>
