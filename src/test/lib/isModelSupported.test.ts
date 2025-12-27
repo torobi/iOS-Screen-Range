@@ -1,5 +1,5 @@
 import type { IOSMajorVersion, IPhoneModel } from '@lib/iosTypes';
-import { isModelSupported } from '@lib/isModelSupported';
+import { isModelSupported } from '@lib/modelUtils';
 import { describe, expect, it } from 'vitest';
 
 function createMockIPhoneModel(

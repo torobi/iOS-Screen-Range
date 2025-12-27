@@ -5,7 +5,7 @@ import {
   iOSVersions,
   type SelectableIOSMajorVersion,
 } from '@lib/iosTypes';
-import { isModelSupported } from '@lib/isModelSupported';
+import { getMaxModel, getMinModel, isModelSupported } from '@lib/modelUtils';
 
 let selectedVersion: SelectableIOSMajorVersion = $state(
   iOSVersions[iOSVersions.length - 1],
@@ -14,50 +14,10 @@ let supportedModels = $derived(
   iPhoneModels.filter((model) => isModelSupported(model, selectedVersion)),
 );
 
-let minWidthModel = $derived(
-  supportedModels.reduce((min, m) => {
-    if (m.screen.width < min.screen.width) {
-      return m;
-    } else if (m.screen.width === min.screen.width) {
-      return m.screen.height < min.screen.height ? m : min;
-    } else {
-      return min;
-    }
-  }, supportedModels[0]),
-);
-let minHeightModel = $derived(
-  supportedModels.reduce((min, m) => {
-    if (m.screen.height < min.screen.height) {
-      return m;
-    } else if (m.screen.height === min.screen.height) {
-      return m.screen.width < min.screen.width ? m : min;
-    } else {
-      return min;
-    }
-  }, supportedModels[0]),
-);
-let maxWidthModel = $derived(
-  supportedModels.reduce((max, m) => {
-    if (m.screen.width > max.screen.width) {
-      return m;
-    } else if (m.screen.width === max.screen.width) {
-      return m.screen.height > max.screen.height ? m : max;
-    } else {
-      return max;
-    }
-  }, supportedModels[0]),
-);
-let maxHeightModel = $derived(
-  supportedModels.reduce((max, m) => {
-    if (m.screen.height > max.screen.height) {
-      return m;
-    } else if (m.screen.height === max.screen.height) {
-      return m.screen.width > max.screen.width ? m : max;
-    } else {
-      return max;
-    }
-  }, supportedModels[0]),
-);
+let minWidthModel = $derived(getMinModel(supportedModels, 'width'));
+let minHeightModel = $derived(getMinModel(supportedModels, 'height'));
+let maxWidthModel = $derived(getMaxModel(supportedModels, 'width'));
+let maxHeightModel = $derived(getMaxModel(supportedModels, 'height'));
 
 function isSameSizeDevice(widthModel: IPhoneModel, heightModel: IPhoneModel) {
   return (
