@@ -1,15 +1,17 @@
 <script lang="ts">
 import { iPhoneModels } from '@lib/iosModels';
 import {
-  type IOSMajorVersion,
   type IPhoneModel,
   iOSVersions,
+  type SelectableIOSMajorVersion,
 } from '@lib/iosTypes';
 
-type SelectableIOSMajorVersion = Exclude<IOSMajorVersion, 'supported'>;
-
-let selectedVersion: SelectableIOSMajorVersion = $state(iOSVersions[iOSVersions.length - 1]);
-let supportedModels = $derived(iPhoneModels.filter((model) => isModelSupported(model, selectedVersion)));
+let selectedVersion: SelectableIOSMajorVersion = $state(
+  iOSVersions[iOSVersions.length - 1],
+);
+let supportedModels = $derived(
+  iPhoneModels.filter((model) => isModelSupported(model, selectedVersion)),
+);
 
 function isModelSupported(
   model: IPhoneModel,
@@ -19,8 +21,8 @@ function isModelSupported(
   return selectedVersion <= model.maxOS;
 }
 
-let minWidthModel = $derived(supportedModels.reduce(
-  (min, m) => {
+let minWidthModel = $derived(
+  supportedModels.reduce((min, m) => {
     if (m.screen.width < min.screen.width) {
       return m;
     } else if (m.screen.width === min.screen.width) {
@@ -28,11 +30,10 @@ let minWidthModel = $derived(supportedModels.reduce(
     } else {
       return min;
     }
-  },
-  supportedModels[0],
-));
-let minHeightModel = $derived(supportedModels.reduce(
-  (min, m) => {
+  }, supportedModels[0]),
+);
+let minHeightModel = $derived(
+  supportedModels.reduce((min, m) => {
     if (m.screen.height < min.screen.height) {
       return m;
     } else if (m.screen.height === min.screen.height) {
@@ -40,11 +41,10 @@ let minHeightModel = $derived(supportedModels.reduce(
     } else {
       return min;
     }
-  },
-  supportedModels[0],
-));
-let maxWidthModel = $derived(supportedModels.reduce(
-  (max, m) => {
+  }, supportedModels[0]),
+);
+let maxWidthModel = $derived(
+  supportedModels.reduce((max, m) => {
     if (m.screen.width > max.screen.width) {
       return m;
     } else if (m.screen.width === max.screen.width) {
@@ -52,11 +52,10 @@ let maxWidthModel = $derived(supportedModels.reduce(
     } else {
       return max;
     }
-  },
-  supportedModels[0],
-));
-let maxHeightModel = $derived(supportedModels.reduce(
-  (max, m) => {
+  }, supportedModels[0]),
+);
+let maxHeightModel = $derived(
+  supportedModels.reduce((max, m) => {
     if (m.screen.height > max.screen.height) {
       return m;
     } else if (m.screen.height === max.screen.height) {
@@ -64,9 +63,8 @@ let maxHeightModel = $derived(supportedModels.reduce(
     } else {
       return max;
     }
-  },
-  supportedModels[0],
-));
+  }, supportedModels[0]),
+);
 
 function isSameSizeDevice(widthModel: IPhoneModel, heightModel: IPhoneModel) {
   return (
