@@ -5,8 +5,7 @@ import {
   iOSVersions,
   type SelectableIOSMajorVersion,
 } from '@lib/iosTypes';
-import { isModelSupported } from '@lib/isModelSupported';
-import { getMaxModel, getMinModel } from '@lib/modelUtils';
+import { getMaxModel, getMinModel, isModelSupported } from '@lib/modelUtils';
 
 let selectedVersion: SelectableIOSMajorVersion = $state(
   iOSVersions[iOSVersions.length - 1],
