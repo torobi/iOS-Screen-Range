@@ -1,12 +1,10 @@
 <script lang="ts">
 import { iPhoneModels } from '@lib/iosModels';
 import {
-  type IOSMajorVersion,
+  type SelectableIOSMajorVersion,
   type IPhoneModel,
   iOSVersions,
 } from '@lib/iosTypes';
-
-type SelectableIOSMajorVersion = Exclude<IOSMajorVersion, 'supported'>;
 
 let selectedVersion: SelectableIOSMajorVersion = $state(iOSVersions[iOSVersions.length - 1]);
 let supportedModels = $derived(iPhoneModels.filter((model) => isModelSupported(model, selectedVersion)));

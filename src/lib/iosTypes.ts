@@ -3,6 +3,7 @@ export const iOSVersions = [
 ] as const;
 
 export type IOSMajorVersion = (typeof iOSVersions)[number] | 'supported';
+export type SelectableIOSMajorVersion = Exclude<IOSMajorVersion, 'supported'>;
 
 export interface IPhoneModel {
   name: string;
