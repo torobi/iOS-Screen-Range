@@ -5,6 +5,7 @@ import {
   iOSVersions,
   type SelectableIOSMajorVersion,
 } from '@lib/iosTypes';
+import { isModelSupported } from '@lib/isModelSupported';
 
 let selectedVersion: SelectableIOSMajorVersion = $state(
   iOSVersions[iOSVersions.length - 1],
@@ -12,14 +13,6 @@ let selectedVersion: SelectableIOSMajorVersion = $state(
 let supportedModels = $derived(
   iPhoneModels.filter((model) => isModelSupported(model, selectedVersion)),
 );
-
-function isModelSupported(
-  model: IPhoneModel,
-  selectedVersion: SelectableIOSMajorVersion,
-): boolean {
-  if (model.maxOS === 'supported') return true;
-  return selectedVersion <= model.maxOS;
-}
 
 let minWidthModel = $derived(
   supportedModels.reduce((min, m) => {
