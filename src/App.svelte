@@ -1,10 +1,10 @@
 <script lang="ts">
-import { iPhoneModels } from './lib/iosModels';
+import { iPhoneModels } from '@lib/iosModels';
 import {
   type IOSMajorVersion,
   type IPhoneModel,
   iOSVersions,
-} from './lib/iosTypes';
+} from '@lib/iosTypes';
 
 type SelectableIOSMajorVersion = Exclude<IOSMajorVersion, 'supported'>;
 
