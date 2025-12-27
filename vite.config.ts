@@ -1,6 +1,6 @@
 import { svelte } from '@sveltejs/vite-plugin-svelte';
+import * as path from 'path';
 import { defineConfig } from 'vite';
-import * as path from "path";
 
 // https://vite.dev/config/
 export default defineConfig({
@@ -8,8 +8,8 @@ export default defineConfig({
   base: '/iOS-Screen-Range/',
   resolve: {
     alias: {
-      "@src": path.resolve(__dirname, "src"),
-      "@lib": path.resolve(__dirname, "src/lib"),
+      '@src': path.resolve(__dirname, 'src'),
+      '@lib': path.resolve(__dirname, 'src/lib'),
     },
   },
 });
